@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Common/Common.csproj" />
+  <Project Path="ConsoleApp/ConsoleApp.csproj" Id="3a178441-3905-435f-8f22-df1429c98f3b" />
+  <Project Path="DBModels/DBModels.csproj" />
+  <Project Path="Services/Services.csproj" Id="a3b1cf4b-c355-4109-80e6-ff8951cdb409" />
+  <Project Path="UIModels/UIModels.csproj" />
+</Solution>
