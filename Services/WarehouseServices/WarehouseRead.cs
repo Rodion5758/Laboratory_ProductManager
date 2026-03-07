@@ -5,7 +5,7 @@ using Laboratory_ProductManager.UIModels.WareHouseUIModel;
 
 namespace Laboratory_ProductManager.Services.WarehouseServices
 {
-    public class WarehouseRead
+    public class WarehouseRead : IWarehouseRead
     {
         public List<WarehouseView> GetAllWarehouses()
         {
@@ -13,14 +13,8 @@ namespace Laboratory_ProductManager.Services.WarehouseServices
 
             foreach (var warehouse in FakeStorage.Warehouses)
             {
-                List<ProductDBModel> products = GetProductsByWarehouseId(warehouse.ID);
+                // Буде ліниве завантаження
                 var warehouseView = new  WarehouseView(warehouse);
-
-                foreach (var product in products)
-                {
-                    warehouseView.Products.Add(new ProductView(product));
-                }
-
                 finalList.Add(warehouseView);
             }
 
@@ -33,27 +27,27 @@ namespace Laboratory_ProductManager.Services.WarehouseServices
 
             if (dbmodel == null) throw new ArgumentNullException();
 
-            List<ProductDBModel> products = GetProductsByWarehouseId(warehouseId);
-
             var warehouseView = new WarehouseView(dbmodel);
+
+            List<ProductView> products = GetProductsByWarehouseId(warehouseId);
 
             foreach (var product in products)
             {
-                warehouseView.Products.Add(new ProductView(product));
+                warehouseView.Products.Add(product);
             }
 
             return warehouseView;
         }
 
-        public List<ProductDBModel> GetProductsByWarehouseId(Guid warehouseId)
+        public List<ProductView> GetProductsByWarehouseId(Guid warehouseId)
         {
-            List<ProductDBModel> products = new List<ProductDBModel>();
+            List<ProductView> products = new List<ProductView>();
 
             foreach (var product in FakeStorage.Products)
             {
                 if (product.WareHouseID == warehouseId)
                 {
-                    products.Add(product);
+                    products.Add(new ProductView(product));
                 }
             }
 

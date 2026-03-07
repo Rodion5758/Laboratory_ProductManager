@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using Laboratory_ProductManager.Services.WarehouseServices;
 using Laboratory_ProductManager.UIModels.ProductUIModel;
 using Laboratory_ProductManager.UIModels.WareHouseUIModel;
@@ -34,7 +33,6 @@ namespace Laboratory_ProductManager.ConsoleApp
 
                     Console.WriteLine($"About the warehouse: ");
                     Console.WriteLine($"Name: {selectedWarehouse.Name}");
-                    Console.WriteLine($"ID: {selectedWarehouse.ID}");
 
                     if (selectedWarehouse.Products.Count == 0)
                     {

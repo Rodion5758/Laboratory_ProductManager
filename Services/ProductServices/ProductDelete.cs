@@ -1,5 +1,4 @@
-﻿
-using Laboratory_ProductManager.DBModels;
+﻿using Laboratory_ProductManager.DBModels;
 using Laboratory_ProductManager.Services.ProductServices.Common;
 
 namespace Laboratory_ProductManager.Services.ProductServices

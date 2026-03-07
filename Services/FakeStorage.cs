@@ -18,9 +18,9 @@ namespace Laboratory_ProductManager.Services
         // Used llm to generate the examples))
         private static void GenerateData()
         {
-            var mainWarehouse = new WareHouseDBModel { Name = "Kyiv Warehous", Location = WareHouseLocation.Kyiv };
-            var reserveWarehouse = new WareHouseDBModel { Name = "Lviv Warehouse", Location = WareHouseLocation.Lviv };
-            var emptyWarehouse = new WareHouseDBModel { Name = "Mankivka Warehouse", Location = WareHouseLocation.Mankivka };
+            var mainWarehouse = new WareHouseDBModel(name : "Kyiv Warehouse", location : WareHouseLocation.Kyiv );
+            var reserveWarehouse = new WareHouseDBModel( name : "Lviv Warehouse", location : WareHouseLocation.Lviv );
+            var emptyWarehouse = new WareHouseDBModel( name : "Mankivka Warehouse", location : WareHouseLocation.Mankivka );
 
             Warehouses.Add(mainWarehouse);
             Warehouses.Add(reserveWarehouse);
