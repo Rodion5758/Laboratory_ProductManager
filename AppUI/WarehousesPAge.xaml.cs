@@ -20,12 +20,11 @@ namespace AppUI
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class WarehousesPAge : Page
+    public partial class WarehousesPAge : UserControl
     {
-        public WarehousesPAge(WarehousesViewModel viewModel)
+        public WarehousesPAge()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
         }
     }
 }

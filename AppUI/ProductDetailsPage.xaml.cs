@@ -18,12 +18,11 @@ using System.Windows.Shapes;
 
 namespace AppUI
 {
-    public partial class ProductDetailsPage : Page
+    public partial class ProductDetailsPage : UserControl
     {
-        public ProductDetailsPage(ProductDetailViewModel viewModel) 
+        public ProductDetailsPage() 
         {
             InitializeComponent();
-            this.DataContext = viewModel;
         }
     }
 }

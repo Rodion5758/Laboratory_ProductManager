@@ -7,7 +7,7 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly IServiceProvider _serviceProvidr;
+        private readonly INavigationService _navigationService;
         private BaseViewModel _currentViewModel;
 
         public BaseViewModel CurrentViewModel
@@ -16,27 +16,13 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
             set => SetProperty(ref _currentViewModel, value);
         }
 
-        public MainViewModel(IServiceProvider provider)
+        public MainViewModel(INavigationService navigationService)
         {
-            _serviceProvidr = provider;
-            NavigateToWarehouses();
-        }
+            _navigationService = navigationService;
 
-        public void NavigateToWarehouses()
-        {
-            CurrentViewModel = _serviceProvidr.GetRequiredService<WarehousesViewModel>();
-        }
+            _navigationService.CurrentViewChanged += () => CurrentViewModel = (BaseViewModel)_navigationService.CurrentView;
 
-        public void NavigateToWarehouseDetail(Guid warehouseId)
-        {
-            var vm = _serviceProvidr.GetRequiredService<WarehouseProductsViewModel>();
-            CurrentViewModel = vm;
-        }
-
-        public void NavigateToProductDetail(Guid produtctId)
-        {
-            var vm = _serviceProvidr.GetRequiredService<ProductDetailViewModel>();
-            CurrentViewModel = vm;
+            _navigationService.NavigateTo<WarehousesViewModel>();
         }
     }
 }

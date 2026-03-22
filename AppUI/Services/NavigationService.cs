@@ -1,41 +1,40 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Laboratory_ProductManager.AppUI.Services
+public interface INavigationService
 {
-    public interface INavigationService
+    object CurrentView { get; }
+    void NavigateTo<T>(Action<T> initialize = null) where T : class;
+    event Action CurrentViewChanged;
+}
+
+public class NavigationService : INavigationService
+{
+    private readonly IServiceProvider _serviceProvider;
+    private object _currentView;
+
+    public NavigationService(IServiceProvider serviceProvider)
     {
-        object CurrentView { get; }
-        void NavigateTo<T>() where T : class;
-        event Action CurrentViewChanged;
+        _serviceProvider = serviceProvider;
     }
-    public class NavigationService : INavigationService
+
+    public event Action CurrentViewChanged;
+
+    public object CurrentView
     {
-        private readonly IServiceProvider _serviceProvider;
-        private object _currentView;
-
-        public NavigationService(IServiceProvider serviceProvider)
+        get => _currentView;
+        private set
         {
-            _serviceProvider = serviceProvider;
+            _currentView = value;
+            CurrentViewChanged?.Invoke();
         }
+    }
 
-        public event Action CurrentViewChanged;
+    public void NavigateTo<T>(Action<T> initialize = null) where T : class
+    {
+        var viewModel = _serviceProvider.GetRequiredService<T>();
 
-        public object CurrentView
-        {
-            get => _currentView;
-            private set
-            {
-                _currentView = value;
-                CurrentViewChanged?.Invoke();
-            }
-        }
+        initialize?.Invoke(viewModel);
 
-        public void NavigateTo<T>() where T : class
-        {
-            CurrentView = _serviceProvider.GetRequiredService<T>();
-        }
+        CurrentView = viewModel;
     }
 }

@@ -1,9 +1,10 @@
-﻿using Laboratory_ProductManager.Repositories;
-using Laboratory_ProductManager.Services;
+﻿
 using Laboratory_ProductManager.AppUI.ViewModels;
+using Laboratory_ProductManager.Repositories;
+using Laboratory_ProductManager.Services;
+using Laboratory_ProductManager.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using Laboratory_ProductManager.Services.Interfaces;
 
 namespace AppUI
 {
@@ -25,6 +26,8 @@ namespace AppUI
             // Repositories
             services.AddSingleton<IWarehouseRepository, WarehouseRepository>();
             services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddSingleton<INavigationService, NavigationService>();
+
 
             // Services
             services.AddTransient<IWarehouseService, WarehouseService>();
@@ -46,7 +49,7 @@ namespace AppUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            var mainWindow = _container.GetService<MainWindow>();
+            var mainWindow = _container.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
     }

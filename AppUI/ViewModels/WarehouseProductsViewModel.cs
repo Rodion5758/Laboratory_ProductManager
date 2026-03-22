@@ -6,12 +6,13 @@ using Laboratory_ProductManager.Services.Interfaces;
 
 using System.Collections.ObjectModel;
 
+
 namespace Laboratory_ProductManager.AppUI.ViewModels
 {
     public class WarehouseProductsViewModel : BaseViewModel
     {
         private readonly IWarehouseService _warehouseService;
-        private readonly MainViewModel _mainViewModel;
+        private readonly INavigationService _navigation;
         private RelayCommand _backCommand;
 
         private WarehouseView _warehouse;
@@ -36,7 +37,7 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
             {
                 if (SetProperty(ref _selectedProduct, value) && value != null)
                 {
-                    _mainViewModel.NavigateToProductDetail(value.ID);
+                    _navigation.NavigateTo<ProductDetailViewModel>(vm => vm.Initialize(value.ID, Warehouse.ID));
                 }
             }
         }
@@ -44,25 +45,29 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
         public RelayCommand BackCommand =>
             _backCommand ??= new RelayCommand(o => GoBack());
 
-        public WarehouseProductsViewModel(IWarehouseService warehouseService, Guid warehouseId, MainViewModel mainViewModel)
+        public WarehouseProductsViewModel(IWarehouseService warehouseService, INavigationService navigation)
         {
             _warehouseService = warehouseService;
-            _mainViewModel = mainViewModel;
+            _navigation = navigation;
+        }
+
+        public void Initialize(Guid warehouseId)
+        {
             LoadWarehouse(warehouseId);
         }
 
         private void LoadWarehouse(Guid warehouseId)
         {
             var dbWarehouse = _warehouseService.GetWarehouseById(warehouseId);
-
             var location = Enum.Parse<WareHouseLocation>(dbWarehouse.Location);
-            Warehouse = new WarehouseView(dbWarehouse.Id, dbWarehouse.Name, location);
 
+            var warehouseView = new WarehouseView(dbWarehouse.Id, dbWarehouse.Name, location);
 
             Products = new ObservableCollection<ProductView>();
+
             foreach (var product in dbWarehouse.Products)
             {
-                Products.Add(new ProductView(
+                var productView = new ProductView(
                     product.Id,
                     dbWarehouse.Id,
                     product.Name,
@@ -70,13 +75,20 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
                     product.Quantity,
                     product.Category,
                     "Product"
-                ));
+                );
+
+                Products.Add(productView);
+                warehouseView.Products.Add(productView);
             }
+
+            Warehouse = warehouseView;
         }
+
+
 
         private void GoBack()
         {
-            _mainViewModel.NavigateToWarehouses();
+            _navigation.NavigateTo<WarehousesViewModel>();
         }
     }
 }

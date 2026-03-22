@@ -8,9 +8,9 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
     public class ProductDetailViewModel : BaseViewModel
     {
         private readonly IProductService _service;
-        private readonly MainViewModel _mainViewModel;
+        private readonly INavigationService _navigation;
         private RelayCommand _backCommand;
-
+        private Guid _warehouseId;
         private ProductView _product;
         public ProductView Product
         {
@@ -21,10 +21,15 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
         public RelayCommand BackCommand =>
             _backCommand ??= new RelayCommand(o => GoBack());
 
-        public ProductDetailViewModel(IProductService service, Guid productId, MainViewModel mainViewModel)
+        public ProductDetailViewModel(IProductService service, INavigationService navigation)
         {
             _service = service;
-            _mainViewModel = mainViewModel;
+            _navigation = navigation;
+        }
+
+        public void Initialize(Guid productId, Guid warehouseId)
+        {
+            _warehouseId = warehouseId;
             LoadProductDetail(productId);
         }
 
@@ -32,9 +37,10 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
         {
             var dbProduct = _service.GetProductById(productId);
             var category = Enum.Parse<ProductCategory>(dbProduct.Category ?? "Electronics");
+
             Product = new ProductView(
                 dbProduct.Id,
-                dbProduct.Id,
+                Guid.Empty,
                 dbProduct.Name,
                 dbProduct.Price,
                 dbProduct.Quantity,
@@ -45,7 +51,7 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
 
         private void GoBack()
         {
-            _mainViewModel.NavigateToWarehouses();
+            _navigation.NavigateTo<WarehouseProductsViewModel>(vm => vm.Initialize(_warehouseId));
         }
     }
 }

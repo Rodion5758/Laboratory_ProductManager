@@ -8,8 +8,8 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
     public class WarehousesViewModel : BaseViewModel
     {
         private readonly IWarehouseService _service;
-        private readonly MainViewModel _mainViewModel;
         private RelayCommand _selectWarehouseCommand;
+        private INavigationService _navigation;
 
         private ObservableCollection<WarehouseView> _warehouses;
         public ObservableCollection<WarehouseView> Warehouses
@@ -26,7 +26,7 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
             {
                 if (SetProperty(ref _selectedWarehouse, value) && value != null)
                 {
-                    _mainViewModel.NavigateToWarehouseDetail(value.ID);
+                    _navigation.NavigateTo<WarehouseProductsViewModel>(vm => vm.Initialize(value.ID));
                 }
             }
         }
@@ -34,10 +34,10 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
         public RelayCommand SelectWarehouseCommand =>
             _selectWarehouseCommand ??= new RelayCommand(o => SelectWarehouse());
 
-        public WarehousesViewModel(IWarehouseService service, MainViewModel mainViewModel)
+        public WarehousesViewModel(IWarehouseService service, INavigationService navigationService)
         {
+            _navigation = navigationService;
             _service = service;
-            _mainViewModel = mainViewModel;
             LoadWarehouses();
         }
 
@@ -57,7 +57,7 @@ namespace Laboratory_ProductManager.AppUI.ViewModels
         {
             if (SelectedWarehouse != null)
             {
-                _mainViewModel.NavigateToWarehouseDetail(SelectedWarehouse.ID);
+                _navigation.NavigateTo<WarehouseProductsViewModel>(vm => vm.Initialize(SelectedWarehouse.ID));
             }
         }
     }
