@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Product Manager by Shapoval Rodion" Height="450" Width="800">
     <Grid>
-        <Frame x:Name="FrameManager"/>
+        <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>
 </Window>

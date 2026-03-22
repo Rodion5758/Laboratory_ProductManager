@@ -1,8 +1,7 @@
 <Solution>
   <Project Path="AppUI/AppUI.csproj" />
   <Project Path="Common/Common.csproj" />
-  <Project Path="ConsoleApp/ConsoleApp.csproj" />
-  <Project Path="DBModels/DBModels.csproj" />
+  <Project Path="Repositories/Repositories.csproj" Id="f3e4f3a4-8eaf-4e0d-9dab-a4b690a83152" />
   <Project Path="Services/Services.csproj" />
   <Project Path="UIModels/UIModels.csproj" />
 </Solution>

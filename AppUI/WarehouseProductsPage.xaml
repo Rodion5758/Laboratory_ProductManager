@@ -9,8 +9,32 @@
       Title="Page1">
 
     <StackPanel VerticalAlignment="Top" Margin="20">
+        <TextBlock Text="Warehouse details:" FontWeight="Bold" FontSize="15" Padding="10"/>
+        
+        <StackPanel VerticalAlignment="Top">
+            <TextBlock>
+                <Run Text="Name :"/>
+                <Run Text="{Binding Name, Mode=OneWay}"/>
+            </TextBlock> 
+                
+            <TextBlock>
+                <Run Text="Location :"/>
+                <Run Text="{Binding Location, Mode=OneWay}"/>
+            </TextBlock> 
+
+            <TextBlock>
+                <Run Text="Total Products :"/>
+                <Run Text="{Binding TotalProducts, Mode=OneWay}"/>
+            </TextBlock>
+
+            <TextBlock>
+                <Run Text="Total Value :"/>
+                <Run Text="{Binding TotalValue, Mode=OneWay}"/>
+            </TextBlock>
+        </StackPanel>
+
         <TextBlock Text="The products in the warehouse:" FontWeight="Bold" FontStyle="Italic" FontSize="19" Padding="10"/>
-        <ListBox x:Name="Products" MouseDoubleClick="OpenProductDetailsPage">
+        <ListBox x:Name="Products" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel HorizontalAlignment="Left">
@@ -18,11 +42,16 @@
                         <Run Text="{Binding Name, Mode=OneWay}"/>
                         <Run Text=": "/>
                         <Run Text="{Binding Price, Mode=OneWay}"/>
+                        <Run Text=" hrn, Quantity: "/>
+                        <Run Text="{Binding Quantity, Mode=OneWay}"/>
+                        <Run Text=", Total: "/>
+                        <Run Text="{Binding TotalCost, Mode=OneWay}"/>
+                        <Run Text=" hrn"/>
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Click="BackButton" Content="Back to warehouses" HorizontalAlignment="Left"/>
+        <Button Click="{Binding BackCommand}" Content="Back to warehouses" HorizontalAlignment="Left"/>
     </StackPanel>
 </Page>

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <RootNamespace>Laboratory_ProductManager.AppUI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Repositories\Repositories.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
-    <ProjectReference Include="..\UIModels\UIModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

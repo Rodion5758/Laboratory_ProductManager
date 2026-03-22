@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\DBModels\DBModels.csproj" />
   </ItemGroup>
 
 </Project>

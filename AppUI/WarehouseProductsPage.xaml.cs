@@ -1,4 +1,5 @@
-﻿using Laboratory_ProductManager.Services.WarehouseServices;
+﻿using Laboratory_ProductManager.AppUI.ViewModels;
+using Laboratory_ProductManager.Repositories;
 using Laboratory_ProductManager.UIModels.ProductUIModel;
 using Laboratory_ProductManager.UIModels.WareHouseUIModel;
 using System;
@@ -17,37 +18,14 @@ using System.Windows.Shapes;
 namespace AppUI
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for WarehouseProductsPage.xaml
     /// </summary>
     public partial class WarehouseProductsPage : Page
     {
-
-        private IWarehouseRead _service;
-        private WarehouseView _view;
-        public WarehouseProductsPage(IWarehouseRead service, WarehouseView view)
+        public WarehouseProductsPage(WarehouseProductsViewModel viewModel)
         {
             InitializeComponent();
-            _service = service;
-            _view = view;
-
-            var products = _service.GetProductsByWarehouseId(view.ID);
-
-            Products.ItemsSource = products;
-        }
-
-        private void OpenProductDetailsPage(object sender, MouseButtonEventArgs e)
-        {
-            var productn = this.Products.SelectedItem as ProductView;
-
-            if (productn != null)
-            {
-                NavigationService.Navigate(new ProductDetailsPage(_service, productn));
-            }
-        }
-
-        private void BackButton(object sender, EventArgs e)
-        {
-            NavigationService.GoBack();
+            this.DataContext = viewModel;
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿
-using Laboratory_ProductManager.Common.Enums;
-using Laboratory_ProductManager.DBModels;
+﻿using Laboratory_ProductManager.Common.Enums;
+using Laboratory_ProductManager.UIModels.ProductUIModel;
+using Laboratory_ProductManager.UIModels.WareHouseUIModel;
+using Laboratory_ProductManager.Repositories;
+using Repositories.Warehouse;
+using Repositories.Product;
 
-namespace Laboratory_ProductManager.Services
+namespace Laboratory_ProductManager.Repositories
 {
     internal class FakeStorage
     {   
@@ -46,6 +49,7 @@ namespace Laboratory_ProductManager.Services
                 wareHouseID: warehouseId,
                 name: name,
                 price: price,
+                quantity: 1,
                 category: category,
                 description: "Стандартний опис для " + name
             );

@@ -1,7 +1,7 @@
 ﻿using Laboratory_ProductManager.Common.Enums;
 
 
-namespace Laboratory_ProductManager.DBModels
+namespace Repositories.Product
 {
     public class ProductDBModel
     {   

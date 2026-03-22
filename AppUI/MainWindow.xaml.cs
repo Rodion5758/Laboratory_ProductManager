@@ -1,4 +1,5 @@
-﻿using Laboratory_ProductManager.Services.WarehouseServices;
+﻿using Laboratory_ProductManager.AppUI.ViewModels;
+using Laboratory_ProductManager.Repositories;
 using Laboratory_ProductManager.UIModels.WareHouseUIModel;
 using System.Text;
 using System.Windows;
@@ -18,13 +19,10 @@ namespace AppUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IWarehouseRead _warehouseService;
-        public MainWindow(IWarehouseRead warehouseService)
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-            _warehouseService = warehouseService;
-            var warehouses = _warehouseService.GetAllWarehouses();
-            FrameManager.Navigate(new WarehousesPAge(_warehouseService));
+            this.DataContext = viewModel;
  
         }
     }

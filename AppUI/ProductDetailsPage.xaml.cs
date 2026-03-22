@@ -1,6 +1,8 @@
-﻿using Laboratory_ProductManager.Services.WarehouseServices;
+﻿using Laboratory_ProductManager.AppUI.ViewModels;
+using Laboratory_ProductManager.Repositories;
 using Laboratory_ProductManager.UIModels.ProductUIModel;
 using Laboratory_ProductManager.UIModels.WareHouseUIModel;
+using Repositories.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,23 +18,12 @@ using System.Windows.Shapes;
 
 namespace AppUI
 {
-    /// <summary>
-    /// Interaction logic for Page1.xaml
-    /// </summary>
     public partial class ProductDetailsPage : Page
     {
-
-        private IWarehouseRead _service;
-        public ProductDetailsPage(IWarehouseRead service, ProductView view) 
+        public ProductDetailsPage(ProductDetailViewModel viewModel) 
         {
             InitializeComponent();
-            _service = service;
-            this.DataContext = view;
-        }
-
-        private void BackButton(object sender, EventArgs e)
-        {
-            NavigationService.GoBack();
+            this.DataContext = viewModel;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using Laboratory_ProductManager.Services.WarehouseServices;
+﻿using Laboratory_ProductManager.Repositories;
 using Laboratory_ProductManager.UIModels.ProductUIModel;
 using Laboratory_ProductManager.UIModels.WareHouseUIModel;
 
@@ -9,7 +8,7 @@ namespace Laboratory_ProductManager.ConsoleApp
     {
         static void Main()
         {
-            WarehouseRead warehouseService = new WarehouseRead();
+            IWarehouseRepository warehouseService = new WarehouseRepository();
 
             List<WarehouseView> warehouses = warehouseService.GetAllWarehouses();
 
@@ -72,4 +71,4 @@ namespace Laboratory_ProductManager.ConsoleApp
             }
         }
     }
-}
+}}
