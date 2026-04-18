@@ -1,48 +1,36 @@
-﻿using Laboratory_ProductManager.Common.Enums;
-using Repositories.Product;
-using System;
-using System.Collections.Generic;
+﻿using Laboratory_ProductManager.Common;
+using Laboratory_ProductManager.Repositories.Storage;
 
-namespace Laboratory_ProductManager.Repositories
+namespace Laboratory_ProductManager.Repositories.Product
 {
     public class ProductRepository : IProductRepository
     {
-        // Read operations
-        public ProductDBModel GetProductById(Guid productId)
+        private readonly JsonStorage _storage;
+
+        public ProductRepository(JsonStorage storage)
         {
-            ProductDBModel? dbmodel = null;
-            foreach (var product in FakeStorage.Products)
-            {
-                if (product.ID == productId)
-                {
-                    dbmodel = product;
-                    break;
-                }
-            }
+            _storage = storage;
+        }
+
+        public async Task<ProductDBModel> GetProductByIdAsync(Guid productId)
+        {
+            var data = await _storage.LoadAsync();
+            var dbmodel = data.Products.FirstOrDefault(product => product.ID == productId);
 
             if (dbmodel == null) throw new ArgumentNullException(nameof(productId));
 
             return dbmodel;
         }
 
-        public List<ProductDBModel> GetProductsByWarehouseId(Guid warehouseId)
+        public async Task<List<ProductDBModel>> GetProductsByWarehouseIdAsync(Guid warehouseId)
         {
-            List<ProductDBModel> finalList = new List<ProductDBModel>();
-
-            foreach (var product in FakeStorage.Products)
-            {
-                if (product.WareHouseID == warehouseId)
-                {
-                    finalList.Add(product);
-                }
-            }
-
-            return finalList;
+            var data = await _storage.LoadAsync();
+            return data.Products.Where(product => product.WareHouseID == warehouseId).ToList();
         }
 
-        // Create operations
-        public ProductDBModel CreateProduct(Guid warehouseId, string name, decimal price, int quantity, ProductCategory category, string description)
+        public async Task<ProductDBModel> CreateProductAsync(Guid warehouseId, string name, decimal price, int quantity, ProductCategory category, string description)
         {
+            var data = await _storage.LoadAsync();
             var newProduct = new ProductDBModel(
                 wareHouseID: warehouseId,
                 name: name,
@@ -51,38 +39,60 @@ namespace Laboratory_ProductManager.Repositories
                 category: category,
                 description: description
             );
-            FakeStorage.Products.Add(newProduct);
+            data.Products.Add(newProduct);
+            await _storage.SaveAsync(data);
             return newProduct;
         }
 
-        // Update operations
-        public void UpdateProduct(Guid productId, string name, decimal price, int quantity, ProductCategory category, string description)
+        public async Task UpdateProductAsync(Guid productId, string name, decimal price, int quantity, ProductCategory category, string description)
         {
-            var product = GetProductById(productId);
+            var data = await _storage.LoadAsync();
+            var product = data.Products.FirstOrDefault(product => product.ID == productId);
+
+            if (product == null) throw new ArgumentNullException(nameof(productId));
             
             product.Name = name;
             product.Price = price;
             product.Quantity = quantity;
             product.Category = category;
             product.Description = description;
+            await _storage.SaveAsync(data);
         }
 
-        // Delete operations
-        public void DeleteProduct(Guid productId)
+        public async Task DeleteProductAsync(Guid productId)
         {
-            ProductDBModel? toDelete = null;
-            foreach (var product in FakeStorage.Products)
-            {
-                if (product.ID == productId)
-                {
-                    toDelete = product;
-                    break;
-                }
-            }
+            var data = await _storage.LoadAsync();
+            var toDelete = data.Products.FirstOrDefault(product => product.ID == productId);
 
             if (toDelete == null) throw new ArgumentNullException(nameof(productId));
 
-            FakeStorage.Products.Remove(toDelete);
+            data.Products.Remove(toDelete);
+            await _storage.SaveAsync(data);
+        }
+
+        public ProductDBModel GetProductById(Guid productId)
+        {
+            return GetProductByIdAsync(productId).GetAwaiter().GetResult();
+        }
+
+        public List<ProductDBModel> GetProductsByWarehouseId(Guid warehouseId)
+        {
+            return GetProductsByWarehouseIdAsync(warehouseId).GetAwaiter().GetResult();
+        }
+
+        public ProductDBModel CreateProduct(Guid warehouseId, string name, decimal price, int quantity, ProductCategory category, string description)
+        {
+            return CreateProductAsync(warehouseId, name, price, quantity, category, description).GetAwaiter().GetResult();
+        }
+
+        public void UpdateProduct(Guid productId, string name, decimal price, int quantity, ProductCategory category, string description)
+        {
+            UpdateProductAsync(productId, name, price, quantity, category, description).GetAwaiter().GetResult();
+        }
+
+        public void DeleteProduct(Guid productId)
+        {
+            DeleteProductAsync(productId).GetAwaiter().GetResult();
         }
     }
 }

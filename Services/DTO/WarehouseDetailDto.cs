@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace Laboratory_ProductManager.Services.DTOs
+namespace Laboratory_ProductManager.Services.DTO
 {
     public class WarehouseDetailDto
     {

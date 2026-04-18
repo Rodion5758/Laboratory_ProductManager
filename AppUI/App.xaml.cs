@@ -1,12 +1,10 @@
-﻿
+﻿using Laboratory_ProductManager.AppUI.Services;
 using Laboratory_ProductManager.AppUI.ViewModels;
-using Laboratory_ProductManager.Repositories;
 using Laboratory_ProductManager.Services;
-using Laboratory_ProductManager.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
-namespace AppUI
+namespace Laboratory_ProductManager.AppUI
 {
     public partial class App : Application
     {
@@ -23,15 +21,8 @@ namespace AppUI
 
         private void ConfigureServices(ServiceCollection services)
         {   
-            // Repositories
-            services.AddSingleton<IWarehouseRepository, WarehouseRepository>();
-            services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddProductManagerServices();
             services.AddSingleton<INavigationService, NavigationService>();
-
-
-            // Services
-            services.AddTransient<IWarehouseService, WarehouseService>();
-            services.AddTransient<IProductService, ProductService>();
 
             services.AddTransient<WarehousesPAge>();
             services.AddTransient<WarehouseProductsPage>();
@@ -42,7 +33,6 @@ namespace AppUI
             services.AddTransient<ProductDetailViewModel>();
             services.AddSingleton<MainViewModel>();
 
-            // MainWindow
             services.AddSingleton<MainWindow>();
         }
 

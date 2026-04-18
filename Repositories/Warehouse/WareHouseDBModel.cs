@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Laboratory_ProductManager.Common.Enums;
+﻿using Laboratory_ProductManager.Common;
 
-namespace Repositories.Warehouse
+namespace Laboratory_ProductManager.Repositories.Warehouse
 {
     public class WareHouseDBModel
     {
-           
-        // Same as Product, generated only once and can't be changed
-        public Guid ID { get; }
-        public string Name { get; set; }
-        // Warehouses can be moved to another place, not physically
+        public Guid ID { get; set; }
+        public string Name { get; set; } = string.Empty;
         public WareHouseLocation Location { get; set; }
 
         public WareHouseDBModel() { }

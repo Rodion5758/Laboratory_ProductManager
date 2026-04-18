@@ -1,6 +1,4 @@
-using System;
-
-namespace Laboratory_ProductManager.Services.DTOs
+namespace Laboratory_ProductManager.Services.DTO
 {
     public class WarehouseListDto
     {

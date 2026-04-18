@@ -2,6 +2,7 @@
 using Laboratory_ProductManager.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Laboratory_ProductManager.AppUI.Services;
 
 namespace Laboratory_ProductManager.AppUI.ViewModels
 {

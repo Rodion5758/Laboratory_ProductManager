@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace Laboratory_ProductManager.AppUI.Services;
 
 public interface INavigationService
 {

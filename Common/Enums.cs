@@ -1,4 +1,4 @@
-﻿namespace Laboratory_ProductManager.Common.Enums
+﻿namespace Laboratory_ProductManager.Common
 {
     public enum ProductCategory
     {

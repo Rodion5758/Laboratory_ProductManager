@@ -1,19 +1,21 @@
-﻿<Application x:Class="AppUI.App"
+﻿<Application x:Class="Laboratory_ProductManager.AppUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AppUI"
-             xmlns:vm="clr-namespace:Laboratory_ProductManager.AppUI.ViewModels">
+             xmlns:vm="clr-namespace:Laboratory_ProductManager.AppUI.ViewModels"
+             xmlns:appUi="clr-namespace:Laboratory_ProductManager.AppUI">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
         <DataTemplate DataType="{x:Type vm:WarehousesViewModel}">
-            <local:WarehousesPAge/>
+            <appUi:WarehousesPAge/>
         </DataTemplate>
         
         <DataTemplate DataType="{x:Type vm:WarehouseProductsViewModel}">
-            <local:WarehouseProductsPage/>
+            <appUi:WarehouseProductsPage/>
         </DataTemplate>
         
         <DataTemplate DataType="{x:Type vm:ProductDetailViewModel}">
-            <local:ProductDetailsPage/>
+            <appUi:ProductDetailsPage/>
         </DataTemplate>
     </Application.Resources>
 </Application>

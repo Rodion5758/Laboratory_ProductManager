@@ -1,100 +1,101 @@
-﻿using Laboratory_ProductManager.Common.Enums;
-using Repositories.Product;
-using Repositories.Warehouse;
-using System;
-using System.Collections.Generic;
+﻿using Laboratory_ProductManager.Common;
+using Laboratory_ProductManager.Repositories.Product;
+using Laboratory_ProductManager.Repositories.Storage;
 
-namespace Laboratory_ProductManager.Repositories
+namespace Laboratory_ProductManager.Repositories.Warehouse
 {
     public class WarehouseRepository : IWarehouseRepository
     {
-        // Read operations
-        public List<WareHouseDBModel> GetAllWarehouses()
+        private readonly JsonStorage _storage;
+
+        public WarehouseRepository(JsonStorage storage)
         {
-            List<WareHouseDBModel> finalList = new List<WareHouseDBModel>();
-
-            foreach (var warehouse in FakeStorage.Warehouses)
-            {
-                finalList.Add(warehouse);
-            }
-
-            return finalList;
+            _storage = storage;
         }
 
-        public WareHouseDBModel GetWarehouseById(Guid warehouseId)
+        public async Task<List<WareHouseDBModel>> GetAllWarehousesAsync()
         {
-            WareHouseDBModel? dbmodel = null;
-            foreach (var warehouse in FakeStorage.Warehouses)
-            {
-                if (warehouse.ID == warehouseId)
-                {
-                    dbmodel = warehouse;
-                    break;
-                }
-            }
+            var data = await _storage.LoadAsync();
+            return data.Warehouses.ToList();
+        }
+
+        public async Task<WareHouseDBModel> GetWarehouseByIdAsync(Guid warehouseId)
+        {
+            var data = await _storage.LoadAsync();
+            var dbmodel = data.Warehouses.FirstOrDefault(warehouse => warehouse.ID == warehouseId);
 
             if (dbmodel == null) throw new ArgumentNullException(nameof(warehouseId));
 
             return dbmodel;
         }
 
-        public List<ProductDBModel> GetProductsByWarehouseId(Guid warehouseId)
+        public async Task<List<ProductDBModel>> GetProductsByWarehouseIdAsync(Guid warehouseId)
         {
-            List<ProductDBModel> products = new List<ProductDBModel>();
-
-            foreach (var product in FakeStorage.Products)
-            {
-                if (product.WareHouseID == warehouseId)
-                {
-                    products.Add(product);
-                }
-            }
-
-            return products;
+            var data = await _storage.LoadAsync();
+            return data.Products.Where(product => product.WareHouseID == warehouseId).ToList();
         }
 
-        // Create operations
-        public WareHouseDBModel CreateWarehouse(string name, WareHouseLocation location)
+        public async Task<WareHouseDBModel> CreateWarehouseAsync(string name, WareHouseLocation location)
         {
+            var data = await _storage.LoadAsync();
             var newWarehouse = new WareHouseDBModel(name: name, location: location);
-            FakeStorage.Warehouses.Add(newWarehouse);
+            data.Warehouses.Add(newWarehouse);
+            await _storage.SaveAsync(data);
             return newWarehouse;
         }
 
-        // Update operations
-        public void UpdateWarehouse(Guid warehouseId, string name, WareHouseLocation location)
+        public async Task UpdateWarehouseAsync(Guid warehouseId, string name, WareHouseLocation location)
         {
-            var warehouse = GetWarehouseById(warehouseId);
+            var data = await _storage.LoadAsync();
+            var warehouse = data.Warehouses.FirstOrDefault(warehouse => warehouse.ID == warehouseId);
+
+            if (warehouse == null) throw new ArgumentNullException(nameof(warehouseId));
             
             warehouse.Name = name;
             warehouse.Location = location;
+            await _storage.SaveAsync(data);
         }
 
-        // Delete operations
+        public async Task DeleteWarehouseAsync(Guid warehouseId)
+        {
+            var data = await _storage.LoadAsync();
+            var dbModel = data.Warehouses.FirstOrDefault(warehouse => warehouse.ID == warehouseId);
+
+            if (dbModel == null) throw new ArgumentException(nameof(warehouseId));
+
+            data.Warehouses.Remove(dbModel);
+            data.Products.RemoveAll(product => product.WareHouseID == warehouseId);
+            await _storage.SaveAsync(data);
+        }
+
+        public List<WareHouseDBModel> GetAllWarehouses()
+        {
+            return GetAllWarehousesAsync().GetAwaiter().GetResult();
+        }
+
+        public WareHouseDBModel GetWarehouseById(Guid warehouseId)
+        {
+            return GetWarehouseByIdAsync(warehouseId).GetAwaiter().GetResult();
+        }
+
+        public List<ProductDBModel> GetProductsByWarehouseId(Guid warehouseId)
+        {
+            return GetProductsByWarehouseIdAsync(warehouseId).GetAwaiter().GetResult();
+        }
+
+        public WareHouseDBModel CreateWarehouse(string name, WareHouseLocation location)
+        {
+            return CreateWarehouseAsync(name, location).GetAwaiter().GetResult();
+        }
+
+        public void UpdateWarehouse(Guid warehouseId, string name, WareHouseLocation location)
+        {
+            UpdateWarehouseAsync(warehouseId, name, location).GetAwaiter().GetResult();
+        }
+
         public void DeleteWarehouse(Guid warehouseId)
         {
-            WareHouseDBModel? dBModel = null;
-            foreach (var warehouse in FakeStorage.Warehouses)
-            {
-                if (warehouse.ID == warehouseId)
-                {
-                    dBModel = warehouse;
-                    break;
-                }
-            }
-
-            if (dBModel == null) throw new ArgumentException();
-
-            FakeStorage.Warehouses.Remove(dBModel);
-
-            // Also removes all the products in the warehouse. Like cascade in SQL
-            foreach (var product in FakeStorage.Products)
-            {
-                if (product.WareHouseID == warehouseId)
-                {
-                    FakeStorage.Products.Remove(product);
-                }
-            }
+            DeleteWarehouseAsync(warehouseId).GetAwaiter().GetResult();
         }
     }
 }

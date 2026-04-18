@@ -1,8 +1,9 @@
 ﻿using Laboratory_ProductManager.Repositories;
-using Laboratory_ProductManager.Services.DTOs;
 using Laboratory_ProductManager.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using Laboratory_ProductManager.Common;
+using Laboratory_ProductManager.Services.DTO;
 
 namespace Laboratory_ProductManager.Services
 {
@@ -15,9 +16,9 @@ namespace Laboratory_ProductManager.Services
             _repository = repository;
         }
 
-        public ProductDetailDto GetProductById(Guid productId)
+        public async Task<ProductDetailDto> GetProductByIdAsync(Guid productId)
         {
-            var dbProduct = _repository.GetProductById(productId);
+            var dbProduct = await _repository.GetProductByIdAsync(productId);
 
             return new ProductDetailDto
             {
@@ -30,9 +31,10 @@ namespace Laboratory_ProductManager.Services
                 TotalCost = dbProduct.Price * dbProduct.Quantity
             };
         }
-        public List<ProductListDto> GetProductsByWarehouseId(Guid warehouseId)
+
+        public async Task<List<ProductListDto>> GetProductsByWarehouseIdAsync(Guid warehouseId)
         {
-            var dbProducts = _repository.GetProductsByWarehouseId(warehouseId);
+            var dbProducts = await _repository.GetProductsByWarehouseIdAsync(warehouseId);
             var result = new List<ProductListDto>();
 
             foreach (var product in dbProducts)
@@ -42,18 +44,22 @@ namespace Laboratory_ProductManager.Services
                     Id = product.ID,
                     Name = product.Name,
                     Price = product.Price,
-                    Quantity = product.Quantity
+                    Quantity = product.Quantity,
+                    Category = product.Category
                 });
             }
 
             return result;
         }
 
-        public ProductDetailDto CreateProduct(Guid warehouseId, string name, decimal price, int quantity, string category, string description)
+        public async Task<ProductDetailDto> CreateProductAsync(Guid warehouseId, string name, decimal price, int quantity, string category, string description)
         {
-            var dbProduct = _repository.CreateProduct(warehouseId, name, price, quantity, 
-                Enum.Parse<Laboratory_ProductManager.Common.Enums.ProductCategory>(category), 
-                description);
+            ValidateProduct(name, price, quantity);
+            var parsedCategory = ParseCategory(category);
+
+            var dbProduct = await _repository.CreateProductAsync(warehouseId, name.Trim(), price, quantity, 
+                parsedCategory, 
+                description ?? string.Empty);
 
             return new ProductDetailDto
             {
@@ -67,16 +73,57 @@ namespace Laboratory_ProductManager.Services
             };
         }
 
-        public void UpdateProduct(Guid productId, string name, decimal price, int quantity, string category, string description)
+        public async Task UpdateProductAsync(Guid productId, string name, decimal price, int quantity, string category, string description)
         {
-            _repository.UpdateProduct(productId, name, price, quantity,
-                Enum.Parse<Laboratory_ProductManager.Common.Enums.ProductCategory>(category),
-                description);
+            ValidateProduct(name, price, quantity);
+            var parsedCategory = ParseCategory(category);
+
+            await _repository.UpdateProductAsync(productId, name.Trim(), price, quantity,
+                parsedCategory,
+                description ?? string.Empty);
         }
 
-        public void DeleteProduct(Guid productId)
+        public async Task DeleteProductAsync(Guid productId)
         {
-            _repository.DeleteProduct(productId);
+            await _repository.DeleteProductAsync(productId);
+        }
+
+        public ProductDetailDto GetProductById(Guid productId)
+        {
+            return GetProductByIdAsync(productId).GetAwaiter().GetResult();
+        }
+
+        public List<ProductListDto> GetProductsByWarehouseId(Guid warehouseId)
+        {
+            return GetProductsByWarehouseIdAsync(warehouseId).GetAwaiter().GetResult();
+        }
+
+        private static void ValidateProduct(string name, decimal price, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Product name is required.");
+            }
+
+            if (price < 0)
+            {
+                throw new ArgumentException("Product price must be non-negative.");
+            }
+
+            if (quantity < 0)
+            {
+                throw new ArgumentException("Product quantity must be non-negative.");
+            }
+        }
+
+        private static ProductCategory ParseCategory(string category)
+        {
+            if (!Enum.TryParse<ProductCategory>(category, true, out var parsedCategory))
+            {
+                throw new ArgumentException("Product category is invalid.");
+            }
+
+            return parsedCategory;
         }
     }
 }

@@ -1,21 +1,16 @@
-﻿using Laboratory_ProductManager.Common.Enums;
+﻿using Laboratory_ProductManager.Common;
 
-
-namespace Repositories.Product
+namespace Laboratory_ProductManager.Repositories.Product
 {
     public class ProductDBModel
-    {   
-        // ID is generated only once in the constructor and can't be changed
-        public Guid ID { get; }
-
-        // WareHouseID is assigned only once in the constructor and doesn't change
-        public Guid WareHouseID { get; }
-        public string Name { get; set; }
+    {
+        public Guid ID { get; set; }
+        public Guid WareHouseID { get; set; }
+        public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public ProductCategory Category { get; set; }
-        public string Description { get; set; }
-
+        public string Description { get; set; } = string.Empty;
 
         public ProductDBModel() { }
 

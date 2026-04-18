@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\UIModels\UIModels.csproj" />
   </ItemGroup>
 
 </Project>
